@@ -1,14 +1,6 @@
-import _ from 'lodash'
 import L from 'leaflet'
 
-function component() {
-  let element = document.createElement('div')
-  element.innerHTML = _.join(['Hello', 'webpack'])
-  return element
-}
-
 document.addEventListener('DOMContentLoaded', ()=>{
-  document.body.appendChild(component())
   window.m = new BysMap('map')
 })
 
@@ -30,7 +22,7 @@ class BysMap {
   }
 
   initMap_() {
-    this.map = L.map(this.mapId).setView([51.505, -0.1], 13)
+    this.map = L.map(this.mapId).setView([59.92, 10.75], 13)
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
       maxZoom: 18,
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -40,9 +32,6 @@ class BysMap {
     	accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
     }).addTo(this.map);
     this.map.locate({watch: true, setView:true, maxZoom: 16})
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(this.gotLoc_.bind(this));
-    }
   }
 
   locationUpdate_(ev) {
@@ -60,11 +49,6 @@ class BysMap {
     this.stations.forEach(station => {
       station.marker.addTo(this.map)
     })
-  }
-
-  gotLoc_(position) {
-    console.log('yo', position);
-    console.log(`pos ${position.coords.latitude}, ${position.coords.longitude}`);
   }
 }
 
