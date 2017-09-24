@@ -2,11 +2,21 @@
   "name": "bysykkel",
   "version": "1.0.0",
   "description": "enkelt webkart for oslo bysykkel",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "https://github.com/odinho/bysykkel",
   "author": "Odin Hørthe Omdal <odin.omdal@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server --open",
+    "build": "webpack"
+  },
   "devDependencies": {
-    "webpack": "^3.6.0"
+    "css-loader": "^0.28.7",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.8.2"
+  },
+  "dependencies": {
+    "leaflet": "^1.2.0",
+    "lodash": "^4.17.4"
   }
 }

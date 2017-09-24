@@ -1,0 +1,30 @@
+<!doctype html>
+<title>Bysykkel</title>
+<script src=bundle.js></script>
+
+<!-- XXX use local -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+  integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+  crossorigin>
+<style>
+#map {
+  height: 300px;
+}
+.bys-bikes, .bys-locks {
+  background: rgba(154, 247, 154, 0.5);
+  border-radius: 100%;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: rgba(20, 111, 0, 0.7);
+  font-size: 8px;
+  font-weight: bold;
+  padding: 2px;
+  text-align: center;
+}
+.bys-empty {
+  background: rgba(247, 154, 154, 0.5);
+  color: rgba(111, 20, 0, 0.7);
+}
+</style>
+
+<div id=map></div>
