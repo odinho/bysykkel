@@ -7,11 +7,6 @@ function component() {
   return element
 }
 
-let locks = _.range(30).map(n=>L.divIcon({html: ''+n, className: 'bys-locks'}))
-let bikes = _.range(30).map(n=>L.divIcon({html: ''+n, className: 'bys-bikes'}))
-bikes[0].options.className += ' bys-empty'
-locks[0].options.className += ' bys-empty'
-
 document.addEventListener('DOMContentLoaded', ()=>{
   document.body.appendChild(component())
   window.m = new BysMap('map')
@@ -29,6 +24,7 @@ class BysMap {
 
   init_() {
     this.initMap_()
+    this.map.on('locationfound', this.locationUpdate_.bind(this))
     this.stations = new StationManager(this.onCreateStations_.bind(this))
     return this.stations.ready
   }
@@ -43,18 +39,26 @@ class BysMap {
     	id: 'mapbox.streets',
     	accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
     }).addTo(this.map);
-    let marker = L.marker([51.5, -0.09], {icon: bikes[1]}).addTo(this.map);
-    window.marker = marker
-    this.map.locate({watch: true, setView:true})
+    this.map.locate({watch: true, setView:true, maxZoom: 16})
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(this.gotLoc_.bind(this));
     }
   }
 
+  locationUpdate_(ev) {
+    if (!this.circle_)
+    {
+      this.circle_ = L.circle(ev.latlng, {radius: ev.accuracy})
+      this.circle_.addTo(this.map)
+      return
+    }
+    this.circle_.setRadius(ev.accuracy)
+    this.circle_.setLatLng(ev.latlng)
+  }
+
   onCreateStations_() {
     this.stations.forEach(station => {
       station.marker.addTo(this.map)
-      window.marker2 = station.marker
     })
   }
 
@@ -77,7 +81,10 @@ class StationManager extends Map {
   init_() {
     return this.getStations_()
       .then(stations => this.addStations_(stations))
-      .then(() => this.onCreateStations(this))
+      .then(() => {
+        this.onCreateStations(this)
+        return this.updateAvailability_()
+      })
   }
 
   getStations_() {
@@ -93,26 +100,63 @@ class StationManager extends Map {
   }
 
   addStations_(stations) {
+    let icon = L.divIcon({html: '-', className: 'bys-icon'})
     stations.forEach(station => {
-      this.set(station.id, new Station(station))
+      this.set(station.id, new Station(station, icon))
     })
+  }
+
+  updateAvailability_() {
+    return fetch('https://cors-anywhere.herokuapp.com/https://oslobysykkel.no/api/v1/stations/availability', {
+        headers: {'Client-Identifier': 'b71ab9ce8b790201981ff173e951966d'},
+      })
+      .then(response => response.json())
+      .then(json => {
+        console.log('avail reply', json)
+        json.stations.forEach(station => {
+          var s = this.get(station.id)
+          if (s)
+            s.updateAvailability(station.availability)
+        })
+      })
   }
 }
 
 class Station {
-  constructor(station) {
+  constructor(station, icon) {
     this.data = station
+    this.icon_ = icon
 
+    this.availability_ = null
     this.marker_ = null
   }
 
   get marker() {
     if (!this.marker_)
-      this.marker_ = L.marker(this.latlong, {icon: bikes[1]});
+      this.marker_ = L.marker(this.latlong, {icon: this.icon_});
     return this.marker_
   }
 
   get latlong() {
     return [this.data.center.latitude, this.data.center.longitude]
+  }
+
+  updateAvailability(a) {
+    let org = this.availability_
+    this.availability_ = a
+    if (!org)
+      this.updated_(a)
+    else {
+      if (org.bikes != a.bikes || org.locks != a.locks)
+        this.updated_(a, org)
+    }
+  }
+
+  updated_(now, before) {
+    let m = this.marker
+    this.icon_.options.html = ''+now.bikes
+    this.icon_.options.className = now.bikes == 1 ? 'bys-icon bys-low' :
+        (now.bikes == 0 ? 'bys-icon bys-empty' : 'bys-icon bys-ok')
+    this.marker.setIcon(this.icon_)
   }
 }

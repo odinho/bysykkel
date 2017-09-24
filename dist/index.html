@@ -1,5 +1,7 @@
 <!doctype html>
+<meta charset=utf-8>
 <title>Bysykkel</title>
+<meta name=viewport content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <script src=bundle.js></script>
 
 <!-- XXX use local -->
@@ -7,23 +9,34 @@
   integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
   crossorigin>
 <style>
-#map {
-  height: 300px;
+html, body {
+  margin: 0;
+  padding: 0;
 }
-.bys-bikes, .bys-locks {
-  background: rgba(154, 247, 154, 0.5);
+#map {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.bys-icon {
+  background: rgb(100, 100, 100);
   border-radius: 100%;
-  border: 2px solid white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  color: rgba(20, 111, 0, 0.7);
+  color: white;
   font-size: 8px;
   font-weight: bold;
   padding: 2px;
   text-align: center;
 }
+.bys-ok {
+  background: rgb(90, 180, 90);
+}
+.bys-low {
+  background: rgb(160, 200, 70);
+}
 .bys-empty {
-  background: rgba(247, 154, 154, 0.5);
-  color: rgba(111, 20, 0, 0.7);
+  background: rgb(250, 150, 150);
 }
 </style>
 
