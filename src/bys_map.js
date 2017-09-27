@@ -15,7 +15,6 @@ export default class BysMap {
 
   init_() {
     this.initMap_()
-    this.map.on('locationfound', this.locationFound_.bind(this))
     this.stations = new StationManager(this.onCreateStations_.bind(this))
     return this.stations.ready
   }
@@ -30,21 +29,23 @@ export default class BysMap {
         'CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
     }).addTo(this.map);
     this.map.locate({setView: true, maxZoom: 15})
-  }
-
-  locationFound_(ev) {
-    let radius = ev.accuracy / 2
-    this.circle_ = L.circle(ev.latlng, {radius})
-    this.circle_.addTo(this.map)
-
-    navigator.geolocation.watchPosition(
-      this.locationUpdate_.bind(this), null,
-      {timeout: 10000, highAccuracy: true})
+    setTimeout(() => {
+      if (!('geolocation' in navigator))
+        return
+      navigator.geolocation.watchPosition(
+        this.locationUpdate_.bind(this), err => console.warn(err),
+        {timeout: 1000, highAccuracy: true})
+    }, 10)
   }
 
   locationUpdate_(pos) {
     let radius = pos.coords.accuracy / 2
     let latlng = new L.LatLng(pos.coords.latitude, pos.coords.longitude)
+    if (!this.circle_) {
+      this.circle_ = L.circle(ev.latlng, {radius})
+      this.circle_.addTo(this.map)
+      return
+    }
     this.circle_.setRadius(radius)
     this.circle_.setLatLng(latlng)
   }
