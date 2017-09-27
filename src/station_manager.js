@@ -21,10 +21,7 @@ export default class StationManager extends Map {
   }
 
   getStations_() {
-    return fetch('https://cors-anywhere.herokuapp.com/https://oslobysykkel.no/api/v1/stations', {
-        headers: {'Client-Identifier': 'b71ab9ce8b790201981ff173e951966d'},
-      })
-      .then(response => response.json())
+    return StationManager.apiFetch('/stations')
       .then(json => {
         console.log('stations reply', json)
         if (json.stations)
@@ -40,10 +37,7 @@ export default class StationManager extends Map {
   }
 
   updateAvailability_() {
-    return fetch('https://cors-anywhere.herokuapp.com/https://oslobysykkel.no/api/v1/stations/availability', {
-        headers: {'Client-Identifier': 'b71ab9ce8b790201981ff173e951966d'},
-      })
-      .then(response => response.json())
+    return StationManager.apiFetch('/stations/availability')
       .then(json => {
         console.log('avail reply', json)
         json.stations.forEach(station => {
@@ -52,5 +46,12 @@ export default class StationManager extends Map {
             s.updateAvailability(station.availability)
         })
       })
+  }
+
+  static apiFetch(url) {
+    return fetch('https://cors-anywhere.herokuapp.com/https://oslobysykkel.no/api/v1'+url, {
+      headers: {'Client-Identifier': 'b71ab9ce8b790201981ff173e951966d'},
+    })
+    .then(response => response.json())
   }
 }

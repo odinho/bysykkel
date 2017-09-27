@@ -28,8 +28,6 @@ export default class BysMap {
         'OpenStreetMap</a> contributors, ' +
         '<a href="http://creativecommons.org/licenses/by-sa/2.0/"> ' +
         'CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-    	id: 'mapbox.streets',
-    	accessToken: BysMap.MAP_TOKEN,
     }).addTo(this.map);
     this.map.locate({setView: true, maxZoom: 15})
   }
@@ -58,8 +56,6 @@ export default class BysMap {
   }
 }
 BysMap.MAP_URL =
-  'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png' +
-  '?access_token={accessToken}'
-BysMap.MAP_TOKEN =
-  'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBnd' +
-  'HRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
+  'https://api.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png' +
+  '?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYyc' +
+  'XBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'
