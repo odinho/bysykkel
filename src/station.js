@@ -5,6 +5,7 @@ export default class Station {
 
     this.availability_ = null
     this.marker_ = null
+    this.mode_ = 'bikes'
   }
 
   get marker() {
@@ -15,6 +16,11 @@ export default class Station {
 
   get latlong() {
     return [this.data.center.latitude, this.data.center.longitude]
+  }
+
+  setMode(mode) {
+    this.mode_ = mode
+    this.updated_(this.availability_)
   }
 
   updateAvailability(a) {
@@ -30,9 +36,9 @@ export default class Station {
 
   updated_(now, before) {
     let m = this.marker
-    this.icon_.options.html = ''+now.bikes
-    this.icon_.options.className = now.bikes == 1 ? 'bys-icon bys-low' :
-        (now.bikes == 0 ? 'bys-icon bys-empty' : 'bys-icon bys-ok')
+    this.icon_.options.html = ''+now[this.mode_]
+    this.icon_.options.className = now[this.mode_] == 1 ? 'bys-icon bys-low' :
+        (now[this.mode_] == 0 ? 'bys-icon bys-empty' : 'bys-icon bys-ok')
     this.marker.setIcon(this.icon_)
   }
 }

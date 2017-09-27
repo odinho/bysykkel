@@ -1,5 +1,6 @@
 import L from 'leaflet'
 
+import ModeSwitchButton from './mode_switch_button.js'
 import StationManager from './station_manager.js'
 
 
@@ -15,7 +16,11 @@ export default class BysMap {
 
   init_() {
     this.initMap_()
+    console.log(document.getElementById(this.mapId))
     this.stations = new StationManager(this.onCreateStations_.bind(this))
+    new ModeSwitchButton(
+        document.getElementById(this.mapId),
+        m=>this.stations.setMode(m))
     return this.stations.ready
   }
 

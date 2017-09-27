@@ -11,6 +11,10 @@ export default class StationManager extends Map {
     this.ready = this.init_()
   }
 
+  setMode(mode) {
+    this.forEach(s => s.setMode(mode))
+  }
+
   init_() {
     return this.getStations_()
       .then(stations => this.addStations_(stations))
