@@ -47,7 +47,7 @@ export default class BysMap {
     let radius = pos.coords.accuracy / 2
     let latlng = new L.LatLng(pos.coords.latitude, pos.coords.longitude)
     if (!this.circle_) {
-      this.circle_ = L.circle(ev.latlng, {radius})
+      this.circle_ = L.circle(latlng, {radius})
       this.circle_.addTo(this.map)
       return
     }
