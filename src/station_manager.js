@@ -8,6 +8,7 @@ export default class StationManager extends Map {
     this.onUpdateStations = updateStations
     this.marker_ = null
 
+    this.updateAvailabilityBound_ = this.updateAvailability_.bind(this);
     this.ready = this.init_()
   }
 
@@ -43,12 +44,13 @@ export default class StationManager extends Map {
   updateAvailability_() {
     return StationManager.apiFetch('/stations/availability')
       .then(json => {
-        console.log('avail reply', json)
         json.stations.forEach(station => {
           var s = this.get(station.id)
           if (s)
             s.updateAvailability(station.availability)
         })
+        let refresh_in = (json.refresh_rate||20) * 1000
+        setTimeout(this.updateAvailabilityBound_, refresh_in)
       })
   }
 
