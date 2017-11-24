@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -13,6 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
+    new HtmlWebpackPlugin({template: './src/index.html'}),
     new webpack.optimize.ModuleConcatenationPlugin(),
   ],
   module: {
