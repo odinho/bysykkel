@@ -2,18 +2,15 @@ import Station from './station.js'
 
 
 export default class StationManager extends Map {
-  constructor(createStations, updateStations) {
+  constructor(createStations, modeSwitch) {
     super()
     this.onCreateStations = createStations
-    this.onUpdateStations = updateStations
+    this.modeSwitch = modeSwitch
     this.marker_ = null
 
+    modeSwitch.onmodeswitch = this.setMode_.bind(this)
     this.updateAvailabilityBound_ = this.updateAvailability_.bind(this);
     this.ready = this.init_()
-  }
-
-  setMode(mode) {
-    this.forEach(s => s.setMode(mode))
   }
 
   init_() {
@@ -24,6 +21,8 @@ export default class StationManager extends Map {
         return this.updateAvailability_()
       })
   }
+
+  setMode_(mode) { this.forEach(s => s.setMode(mode)) }
 
   getStations_() {
     return StationManager.apiFetch('/stations')
@@ -37,7 +36,7 @@ export default class StationManager extends Map {
   addStations_(stations) {
     let icon = L.divIcon({html: '-', className: 'bys-icon'})
     stations.forEach(station => {
-      this.set(station.id, new Station(station, icon))
+      this.set(station.id, new Station(station, icon, this.modeSwitch.mode))
     })
   }
 

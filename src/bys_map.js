@@ -16,11 +16,10 @@ export default class BysMap {
 
   init_() {
     this.initMap_()
-    console.log(document.getElementById(this.mapId))
-    this.stations = new StationManager(this.onCreateStations_.bind(this))
-    new ModeSwitchButton(
-        document.getElementById(this.mapId),
-        m=>this.stations.setMode(m))
+    let elm = document.getElementById(this.mapId)
+    let modeSwitch = new ModeSwitchButton(elm)
+    this.stations = new StationManager(
+        this.onCreateStations_.bind(this), modeSwitch)
     return this.stations.ready
   }
 

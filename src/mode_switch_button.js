@@ -1,30 +1,25 @@
 export default class ModeSwitchButton {
-  constructor(parent, onModeSwitch) {
+  constructor(parent) {
     this.parent_ = parent
-    this.onModeSwitch_ = onModeSwitch
 
     this.mode = 'bikes'
-    this.elm = null
-    this.init_()
-  }
-
-  init_() {
+    this.onmodeswitch = null
     this.elm = this.createElement_()
     this.parent_.appendChild(this.elm)
   }
 
-  switchMode() {
+  switchMode_() {
     this.mode = this.mode=='bikes' ? 'locks' : 'bikes'
     this.elm.textContent = `mode: ${this.mode}`
-    if (this.onModeSwitch_)
-      this.onModeSwitch_(this.mode)
+    if (this.onmodeswitch)
+      this.onmodeswitch(this.mode)
   }
 
   createElement_() {
     let elm = document.createElement('div')
     elm.id = 'mode-switch'
     elm.textContent = `mode: ${this.mode}`
-    elm.onclick = () => this.switchMode()
+    elm.onclick = () => this.switchMode_()
     return elm
   }
 }

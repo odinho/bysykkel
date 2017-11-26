@@ -1,11 +1,11 @@
 export default class Station {
-  constructor(station, icon) {
+  constructor(station, icon, mode) {
     this.data = station
     this.icon_ = icon
+    this.mode_ = mode || 'bikes'
 
     this.availability_ = null
     this.marker_ = null
-    this.mode_ = 'bikes'
   }
 
   get marker() {
